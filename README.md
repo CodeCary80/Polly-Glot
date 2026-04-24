@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PollyGlot 🌐
+
+An AI-powered translation app built with Next.js, TypeScript, and the Anthropic Claude API. Built as part of the Scrimba AI Engineering course.
+
+## Tech Stack
+
+- **Framework:** Next.js (App Router) + TypeScript
+- **Styling:** Tailwind CSS
+- **AI:** Anthropic Claude (`claude-haiku-4-5-20251001`)
+
+## Features
+
+- Translate text into 50+ languages
+- Clean two-view flow: input → result
+- Server-side API key handling (never exposed to the browser)
+- Chatterbox *(in progress)* — multi-turn AI conversation in your target language
+
+## Project Structure
+
+```
+app/
+├── page.tsx                        # Home — controls view state (input | result)
+├── components/
+│   ├── OriginalSelections.tsx      # Input view (text + language selector)
+│   └── TranslationOutput.tsx       # Result view (original + translated text)
+├── api/
+│   └── translate/
+│       └── route.ts                # Server-side Anthropic API call
+└── lib/
+    └── translation.ts              # Languages data array (50 languages)
+```
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Add your Anthropic API key
+# Create .env.local in the project root:
+ANTHROPIC_API_KEY=your_key_here
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Key Patterns
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Security** — The Anthropic API key stays server-side in `route.ts`. The frontend only calls `/api/translate` (its own Next.js route) and never touches the Anthropic API directly.
 
-## Learn More
+**Client vs Server Components** — `"use client"` is only added to interactive components that need `useState` or event handlers. Parent layout components remain Server Components.
 
-To learn more about Next.js, take a look at the following resources:
+**API Route** — `route.ts` replaces Express. No `app.listen()` or CORS setup needed — Next.js handles it.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data Flow
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+User types text + selects language
+  → clicks Translate
+  → onTranslate(text, language) called in Home
+  → fetch POST /api/translate
+  → route.ts calls Anthropic API
+  → returns { translation: string }
+  → view switches to TranslationOutput
+```
 
-## Deploy on Vercel
+## Roadmap
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [ ] Chatterbox — multi-turn conversation in target language (`/chatterbox`)
+- [ ] Loading state while waiting for translation
+- [ ] User-facing error messages
+- [ ] Handle empty text submission
+- [ ] UI polish
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Author
+
+Cary Zhu — [caryzhu.com](https://caryzhu.com) | [GitHub: CodeCary80](https://github.com/CodeCary80)
