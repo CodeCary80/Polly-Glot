@@ -28,10 +28,10 @@ export default function ChatterBox({onBack}) {
   }
 
   return (
-    <div className="flex flex-col h-[567px] px-4 py-4">
-     <div className="w-[360px] min-h-[547px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-6">
+    <div className="flex flex-col h-[767px] px-4 py-4">
+     <div className="w-[360px] h-[647px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-2">
       {/* 1. chat bubbles area */}
-      <div className="flex-1 overflow-y-auto flex flex-col gap-3 mb-4">
+      <div className="flex-1 overflow-y-auto flex flex-col gap-3 mb-4 min-h-0">
         {messages.map((msg, i) => (
           <div key={i} className={`px-4 py-3 rounded-2xl max-w-[80%] font-semibold text-[18px] ${
             msg.role === "user"

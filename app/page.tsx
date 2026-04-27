@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <main className="flex justify-center py-6">
   
-  <div className="w-[390px] h-[800px] border-1 border-[#BCBCBC] rounded-b-2xl overflow-hidden flex flex-col">
+  <div className="w-[390px] h-[900px] border-1 border-[#BCBCBC] rounded-b-2xl overflow-hidden flex flex-col">
     
     <section className="relative w-full h-[213px] flex-shrink-0">
       <img 
