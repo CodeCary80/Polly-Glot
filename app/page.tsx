@@ -1,10 +1,10 @@
 "use client"
 import { useState } from 'react'
-import Link from "next/link"
 import Logo from "@/public/parrot.png"
 import HeroBanner from "@/public/worldmap.png"
 import OriginalSelections from "@/app/components/OriginalSelections"
 import TranslationOutput from "@/app/components/TranslationOuput"
+import ChatterBox from "@/app/components/ChatterBox"
 
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <main className="flex justify-center py-6">
   
-  <div className="w-[390px]h-[780px] border-1 border-[#BCBCBC] rounded-b-2xl overflow-hidden flex flex-col">
+  <div className="w-[390px] h-[800px] border-1 border-[#BCBCBC] rounded-b-2xl overflow-hidden flex flex-col">
     
     <section className="relative w-full h-[213px] flex-shrink-0">
       <img 
@@ -45,9 +45,11 @@ export default function Home() {
       </div>
     </section>
 
-    {view==="input"
-      ? <OriginalSelections onTranslate={onTranslate} />
-      : <TranslationOutput onTranslate={()=>setView("input")} translatetion={translation} originalText={originalText}/>
+    {view === "input"
+      ? <OriginalSelections onTranslate={onTranslate} onChat={() => setView("chat")} />
+      : view === "result"
+      ? <TranslationOutput onTranslate={() => setView("input")} translatetion={translation} originalText={originalText} />
+      : <ChatterBox onBack={() => setView("input")} />
     }
 
   </div>
