@@ -5,9 +5,12 @@ const anthropic = new Anthropic({
 })
 
 export async function POST(request: Request) {
-  const { messages, language } = await request.json()
 
   try {
+    const { messages, language } = await request.json()
+
+    if(!messages || !language){return Response.json({error:"Missing messages or language"},{status:400})}
+
     const msg = await anthropic.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 1024,
@@ -35,6 +38,6 @@ export async function POST(request: Request) {
     return Response.json({ reply: (msg.content[0] as any).text })
   } catch (error) {
     console.error("Anthropic error:", error)
-  return Response.json({ error: "Translation failed" }, { status: 500 })
+  return Response.json({ error: "Chat failed. Please try again." }, { status: 500 })
   }
 }
