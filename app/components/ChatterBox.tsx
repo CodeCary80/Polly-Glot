@@ -15,9 +15,12 @@ export default function ChatterBox({onBack}) {
     { role: "assistant", content: "Hi! Select a language and start chatting with me!" }
   ])
   const bottomRef = useRef(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   async function handleSend(){
+            if(input.trim()==="") return
             setMessages(prev=>[...prev,{ role: "user", content: input }])
+            setIsLoading(true)
             const res = await fetch("/api/chatterbox",{
                         method:"POST",
                         headers:{"Content-Type":"application/json"},
@@ -25,7 +28,8 @@ export default function ChatterBox({onBack}) {
                     })
             const data = await res.json()
             setMessages(prev=>[...prev,{ role: "assistant", content: data.reply }])
-            setInput('')       
+            setInput('')
+            setIsLoading(false)       
   }
 
   useEffect(()=>{
@@ -59,10 +63,11 @@ export default function ChatterBox({onBack}) {
           rows={2}
         />
         <button 
-            className="bg-[#035A9D] text-white px-4 rounded-xl font-bold hover:bg-blue-800"
+            className="bg-[#035A9D] text-white px-4 rounded-xl font-bold hover:bg-blue-800 disabled:opacity-50"
             onClick={handleSend}
+            disabled={isLoading || input.trim() === ""}
             >
-          Send
+          {isLoading? "..." : "Send"}
         </button>
       </div>
 
