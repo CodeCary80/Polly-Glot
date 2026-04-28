@@ -1,7 +1,7 @@
 "use client"
 
 import { languages } from "@/app/lib/translatetion"
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 type Message = {
   role: "user" | "assistant"
@@ -14,6 +14,7 @@ export default function ChatterBox({onBack}) {
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hi! Select a language and start chatting with me!" }
   ])
+  const bottomRef = useRef(null)
 
   async function handleSend(){
             setMessages(prev=>[...prev,{ role: "user", content: input }])
@@ -27,6 +28,10 @@ export default function ChatterBox({onBack}) {
             setInput('')       
   }
 
+  useEffect(()=>{
+    bottomRef.current?.scrollIntoView({behavior:"smooth"})
+  },[messages])
+
   return (
     <div className="flex flex-col h-[767px] px-4 py-4">
      <div className="w-[360px] h-[647px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-2">
@@ -39,6 +44,7 @@ export default function ChatterBox({onBack}) {
               : "bg-[#035A9D] self-start text-white"
           }`}>
             {msg.content}
+            <div ref={bottomRef}></div>
           </div>
         ))}
       </div>
