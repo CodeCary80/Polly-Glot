@@ -2,11 +2,7 @@
 
 import { languages } from "@/app/lib/translatetion"
 import { useState, useRef, useEffect } from 'react'
-
-type Message = {
-  role: "user" | "assistant"
-  content: string
-}
+import { Message } from "@/app/types"
 
 export default function ChatterBox({onBack}) {
   const [language, setLanguage] = useState(languages[0].id)
@@ -16,20 +12,30 @@ export default function ChatterBox({onBack}) {
   ])
   const bottomRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleSend(){
             if(input.trim()==="") return
             setMessages(prev=>[...prev,{ role: "user", content: input }])
             setIsLoading(true)
+            setError(null)
+
+            try{
             const res = await fetch("/api/chatterbox",{
                         method:"POST",
                         headers:{"Content-Type":"application/json"},
                         body:JSON.stringify({ messages: [...messages, { role: "user", content: input }], language })
                     })
             const data = await res.json()
+
+            if(data.error){setError("Sorry, something went wrong. Please try again.")}else{
             setMessages(prev=>[...prev,{ role: "assistant", content: data.reply }])
+            }
+          }catch(err){setError("Network error. Please check your connection.")}
+          finally{
             setInput('')
-            setIsLoading(false)       
+            setIsLoading(false)
+          }           
   }
 
   useEffect(()=>{
@@ -52,6 +58,8 @@ export default function ChatterBox({onBack}) {
           </div>
         ))}
       </div>
+
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
       {/* 2. input + send button */}
       <div className="flex gap-2 mb-4">

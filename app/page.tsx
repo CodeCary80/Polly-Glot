@@ -13,7 +13,7 @@ export default function Home() {
   const [originalText, setOriginalText] = useState('')
 
 
-  async function onTranslate(text,language){
+  async function onTranslate(text:string,language:string){
       const res = await fetch("/api/translate",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
