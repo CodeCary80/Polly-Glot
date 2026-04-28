@@ -3,6 +3,7 @@
 import { languages } from "@/app/lib/translatetion"
 import { useState, useRef, useEffect } from 'react'
 import { Message } from "@/app/types"
+import { marked } from "marked"
 
 type Prop = {
   onBack : ()=>void
@@ -57,7 +58,13 @@ export default function ChatterBox({onBack}:Prop) {
               ? "bg-[#32CD32] self-end text-black"
               : "bg-[#035A9D] self-start text-white"
           }`}>
-            {msg.content}
+            {msg.role === "assistant" ? (
+              <div 
+                className="prose prose-invert max-w-none"
+                dangerouslySetInnerHTML={{ __html: marked(msg.content) as string }} />
+            ) : (
+              msg.content
+            )}
             <div ref={bottomRef}></div>
           </div>
         ))}

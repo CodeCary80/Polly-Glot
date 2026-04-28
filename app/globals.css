@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
@@ -29,3 +30,6 @@ body {
   }
 }
 
+.prose ul > li::marker {
+  color: #32CD32;
+}
