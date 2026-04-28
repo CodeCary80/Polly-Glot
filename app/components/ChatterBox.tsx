@@ -4,6 +4,8 @@ import { languages } from "@/app/lib/translatetion"
 import { useState, useRef, useEffect } from 'react'
 import { Message } from "@/app/types"
 import { marked } from "marked"
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+
 
 type Prop = {
   onBack : ()=>void
@@ -44,8 +46,12 @@ export default function ChatterBox({onBack}:Prop) {
   }
 
   useEffect(()=>{
-    bottomRef.current?.scrollIntoView({behavior:"smooth"})
-  },[messages])
+  bottomRef.current?.scrollIntoView({behavior:"smooth"})
+},[messages])
+
+useEffect(()=>{
+  bottomRef.current?.scrollIntoView({behavior:"smooth"})
+},[isLoading])
 
   return (
     <div className="flex flex-col h-[767px] px-4 py-4">
@@ -60,7 +66,7 @@ export default function ChatterBox({onBack}:Prop) {
           }`}>
             {msg.role === "assistant" ? (
               <div 
-                className="prose prose-invert max-w-none"
+                className="prose prose-invert prose-sm max-w-none"
                 dangerouslySetInnerHTML={{ __html: marked(msg.content) as string }} />
             ) : (
               msg.content
@@ -68,6 +74,15 @@ export default function ChatterBox({onBack}:Prop) {
             <div ref={bottomRef}></div>
           </div>
         ))}
+        {isLoading && (
+            <DotLottieReact
+              src="https://lottie.host/bd63b2af-6d31-48a5-8bdc-36ce3dc1c4da/1DXFlVCtui.lottie"
+              loop
+              autoplay
+              style={{ width: 120, height: 80 }}
+            />
+          
+        )}
       </div>
 
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
@@ -86,7 +101,7 @@ export default function ChatterBox({onBack}:Prop) {
             onClick={handleSend}
             disabled={isLoading || input.trim() === ""}
             >
-          {isLoading? "..." : "Send"}
+          Send
         </button>
       </div>
 
