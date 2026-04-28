@@ -6,6 +6,7 @@ import { useState } from 'react';
 export default function OriginalSelections({onTranslate,onChat }) {
   const [text, setText] = useState('')
   const [language, setLanguage] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
   const handleTextChange= (event)=>{
       setText(event.target.value);
@@ -15,6 +16,14 @@ export default function OriginalSelections({onTranslate,onChat }) {
       setLanguage(event.target.value);
   }
 
+  function handleTranslate(){
+        if(text.trim()==="" || language.trim()==="")
+        {setError("Please enter text and select a language.")
+          return
+        }
+        setError(null)
+        onTranslate(text,language)   
+  }
 
   return (
     <div className="flex justify-center  px-4 py-6 ">
@@ -46,9 +55,11 @@ export default function OriginalSelections({onTranslate,onChat }) {
             Chat with Polly
           </button>
 
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
         <button 
               className="w-full bg-[#035A9D] text-white font-bold text-xl py-2 rounded-xl mt-auto hover:bg-blue-800 text-[24px]"
-              onClick={()=>onTranslate(text,language)} >
+              onClick={()=>handleTranslate()} >
           Translate
         </button>
 
