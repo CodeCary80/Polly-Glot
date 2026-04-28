@@ -4,13 +4,17 @@ import { languages } from "@/app/lib/translatetion"
 import { useState, useRef, useEffect } from 'react'
 import { Message } from "@/app/types"
 
-export default function ChatterBox({onBack}) {
+type Prop = {
+  onBack : ()=>void
+}
+
+export default function ChatterBox({onBack}:Prop) {
   const [language, setLanguage] = useState(languages[0].id)
   const [input, setInput] = useState('')
   const [messages, setMessages] = useState<Message[]>([
     { role: "assistant", content: "Hi! Select a language and start chatting with me!" }
   ])
-  const bottomRef = useRef(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 

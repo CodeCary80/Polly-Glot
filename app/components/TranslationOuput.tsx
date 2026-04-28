@@ -1,4 +1,11 @@
-export default function TranslationOutput({onTranslate, translatetion, originalText}) {
+type Props = {
+  onTranslate: () => void
+  translatetion:string,
+  originalText:string
+}
+
+
+export default function TranslationOutput({onTranslate, translatetion, originalText}:Props) {
   return (
     <div className="flex justify-center px-4 py-6 ">
       <div className="w-[360px] min-h-[647px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-6">

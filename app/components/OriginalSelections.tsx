@@ -3,16 +3,21 @@
 import { languages } from "@/app/lib/translatetion"
 import { useState } from 'react';
 
-export default function OriginalSelections({onTranslate,onChat }) {
+type Props = {
+  onTranslate: (text: string, language: string) => void
+  onChat: () => void
+}
+
+export default function OriginalSelections({onTranslate,onChat }:Props) {
   const [text, setText] = useState('')
   const [language, setLanguage] = useState('')
   const [error, setError] = useState<string | null>(null)
 
-  const handleTextChange= (event)=>{
+  const handleTextChange= (event:React.ChangeEvent<HTMLTextAreaElement>)=>{
       setText(event.target.value);
   }
 
-  const handleLanguagesChange= (event)=>{
+  const handleLanguagesChange= (event:React.ChangeEvent<HTMLSelectElement>)=>{
       setLanguage(event.target.value);
   }
 
