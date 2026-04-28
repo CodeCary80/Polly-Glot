@@ -12,11 +12,23 @@ type Prop = {
 }
 
 export default function ChatterBox({onBack}:Prop) {
-  const [language, setLanguage] = useState(languages[0].id)
+  const [language, setLanguage] = useState(() => {
+  try {
+    return localStorage.getItem("language") || languages[0].id
+  } catch {
+    return languages[0].id
+  }
+})
   const [input, setInput] = useState('')
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: "Hi! Select a language and start chatting with me!" }
-  ])
+  const [messages, setMessages] = useState<Message[]>(() => {
+  try {
+    const saved = localStorage.getItem("messages")
+    if (saved) return JSON.parse(saved) 
+    return [{ role: "assistant", content: "Hi! Select a language and start chatting with me!" }]
+  } catch {
+    return [{ role: "assistant", content: "Hi! Select a language and start chatting with me!" }] 
+  }
+})
   const bottomRef = useRef<HTMLDivElement>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +57,11 @@ export default function ChatterBox({onBack}:Prop) {
           }           
   }
 
+  function clearMemory(){
+    localStorage.removeItem("messages")
+    setMessages([{ role: "assistant", content: "Hi! Select a language and start chatting with me!" }])
+  }
+
   useEffect(()=>{
   bottomRef.current?.scrollIntoView({behavior:"smooth"})
 },[messages])
@@ -53,20 +70,28 @@ useEffect(()=>{
   bottomRef.current?.scrollIntoView({behavior:"smooth"})
 },[isLoading])
 
+useEffect(() => {
+  localStorage.setItem("messages", JSON.stringify(messages))
+}, [messages])
+
+useEffect(() => {
+  localStorage.setItem("language", language)
+}, [language])
+
   return (
     <div className="flex flex-col h-[767px] px-4 py-4">
-     <div className="w-[360px] h-[647px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-2">
+     <div className="w-[360px] h-[660px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-2">
       {/* 1. chat bubbles area */}
       <div className="flex-1 overflow-y-auto flex flex-col gap-3 mb-4 min-h-0">
         {messages.map((msg, i) => (
-          <div key={i} className={`px-4 py-3 rounded-2xl max-w-[80%] font-semibold text-[18px] ${
+          <div key={i} className={`px-4 py-3 rounded-2xl max-w-[80%] font-semibold text-[16px] ${
             msg.role === "user"
               ? "bg-[#32CD32] self-end text-black"
               : "bg-[#035A9D] self-start text-white"
           }`}>
             {msg.role === "assistant" ? (
               <div 
-                className="prose prose-invert prose-sm max-w-none"
+                className="prose prose-invert max-w-none"
                 dangerouslySetInnerHTML={{ __html: marked(msg.content) as string }} />
             ) : (
               msg.content
@@ -79,7 +104,8 @@ useEffect(()=>{
               src="https://lottie.host/bd63b2af-6d31-48a5-8bdc-36ce3dc1c4da/1DXFlVCtui.lottie"
               loop
               autoplay
-              style={{ width: 120, height: 80 }}
+              style={{ width: 200, height: 110 }}
+              onError={() => console.error("Lottie animation failed to load")}
             />
           
         )}
@@ -88,7 +114,7 @@ useEffect(()=>{
       {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
       {/* 2. input + send button */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 ">
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -115,6 +141,13 @@ useEffect(()=>{
           <option key={lang.id} value={lang.id}>{lang.label}</option>
         ))}
       </select>
+
+      <button 
+                className="w-full bg-[#035A9D] text-white font-bold text-xl py-2 rounded-xl mt-8 -mb-6 hover:bg-blue-800 text-[24px]"
+                onClick={()=>clearMemory()}
+                >
+          Clear chat
+        </button>
 
        <button 
                 className="w-full bg-[#035A9D] text-white font-bold text-xl py-2 rounded-xl mt-8 hover:bg-blue-800 text-[24px]"
