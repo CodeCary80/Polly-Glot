@@ -2,6 +2,8 @@
 
 An AI-powered translation and conversation app built with Next.js, TypeScript, and the Anthropic Claude API. Built as part of the Scrimba AI Engineering course.
 
+Live Demo: https://polly-glot-cary80.netlify.app/
+
 ## Tech Stack
 
 - **Framework:** Next.js (App Router) + TypeScript
