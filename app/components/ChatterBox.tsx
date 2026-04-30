@@ -32,12 +32,18 @@ export default function ChatterBox({onBack, incrementUsage, userApiKey, onInvali
 
   async function handleSend(){
             if(input.trim()==="") return
+
+            const key = userApiKey || localStorage.getItem("userApiKey") || ""
+            const count = parseInt(localStorage.getItem("usageCount") || "0")
+            if(count >= 10 && !key){
+              onInvalidKey()
+              return
+            }
+
             setMessages(prev=>[...prev,{ role: "user", content: input }])
             setIsLoading(true)
             setError(null)
-
-            const key = userApiKey || localStorage.getItem("userApiKey") || ""
-
+            
             try{
               if(key){
                   const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -125,6 +131,7 @@ useEffect(() => {
   return (
     <div className="flex flex-col h-[767px] px-4 py-4">
      <div className="w-[360px] h-[660px] border-2 border-gray-800 rounded-2xl p-4 flex flex-col gap-2">
+      <h2 className="text-center font-bold text-[#035A9D] text-[20px] mb-3 ">Chat with Polly 🦜</h2>
       {/* 1. chat bubbles area */}
       <div className="flex-1 overflow-y-auto flex flex-col gap-3 mb-4 min-h-0">
         {messages.map((msg, i) => (
@@ -155,7 +162,7 @@ useEffect(() => {
         )}
       </div>
 
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {error && <p className="text-red-500 text-sm text-center">⚠️ {error}</p>}
 
       {/* 2. input + send button */}
       <div className="flex gap-2 mb-4 ">
@@ -163,7 +170,7 @@ useEffect(() => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 outline-none resize-none text-[18px]"
+          className="flex-1 border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 outline-none resize-none text-[16px]"
           rows={2}
         />
         <button 
@@ -171,7 +178,10 @@ useEffect(() => {
             onClick={handleSend}
             disabled={isLoading || input.trim() === ""}
             >
-          Send
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
         </button>
       </div>
 
@@ -179,7 +189,7 @@ useEffect(() => {
       <select
         value={language}
         onChange={(e) => setLanguage(e.target.value)}
-        className="border border-gray-200 bg-gray-100 rounded-lg px-4 py-2 text-[18px]"
+        className="w-full border-2 border-gray-800 rounded-xl px-4 py-2 text-[16px] bg-gray-100 font-semibold text-gray-800 outline-none focus:border-[#32CD32]"
       >
         {languages.map((lang) => (
           <option key={lang.id} value={lang.id}>{lang.label}</option>
@@ -187,14 +197,14 @@ useEffect(() => {
       </select>
 
       <button 
-                className="w-full bg-[#035A9D] text-white font-bold text-xl py-2 rounded-xl mt-8 -mb-6 hover:bg-blue-800 text-[24px]"
+                className="w-full border-2 border-[#035A9D] text-[#035A9D] font-bold py-2 rounded-xl mt-8 -mb-6 hover:bg-[#035A9D] hover:text-white text-[16px]"
                 onClick={()=>clearMemory()}
                 >
           Clear chat
         </button>
 
        <button 
-                className="w-full bg-[#035A9D] text-white font-bold text-xl py-2 rounded-xl mt-8 hover:bg-blue-800 text-[24px]"
+                className="w-full border-2 border-[#035A9D] text-[#035A9D] font-bold py-2 rounded-xl mt-8 hover:bg-[#035A9D] hover:text-white text-[16px]"
                 onClick={onBack}
                 >
           Back to home page

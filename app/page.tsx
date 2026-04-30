@@ -19,6 +19,11 @@ export default function Home() {
 
   async function onTranslate(text: string, language: string) {
           const key = userApiKey || localStorage.getItem("userApiKey") || ""
+          const count = parseInt(localStorage.getItem("usageCount") || "0")
+          if(count >= 10 && !key){
+            setShowModal(true)
+            return
+          }
           try{
           if (key) {
             const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -49,9 +54,10 @@ export default function Home() {
               console.log(data)
               if (data.error) {
                 setShowModal(true)
-                return           // ← stops before hitting line 50
+                return           
               }
               setTranslation(data.content[0].text)
+              setOriginalText(text) 
                 } else {
                   const res = await fetch("/api/translate",{
                       method:"POST",
@@ -88,8 +94,10 @@ export default function Home() {
   useEffect(()=>{
       const count =localStorage.getItem("usageCount")
       const key = localStorage.getItem("userApiKey")
+      console.log("count:", count, "key:", key) //
       if(count) setUsageCount(parseInt(count))
       if(key) setUserApiKey(key)
+      if (parseInt(count || "0") >= 10 && !key) setShowModal(true)
   },[])
 
   return (
@@ -119,7 +127,7 @@ export default function Home() {
       : <ChatterBox onBack={() => setView("input")} incrementUsage={incrementUsage} userApiKey={userApiKey} onInvalidKey={() => setShowModal(true)}/>
     }
 
-    <ApiKeyModal isOpen={showModal} onSubmit={handleApiKeySubmit} />
+    <ApiKeyModal isOpen={showModal} onSubmit={handleApiKeySubmit} onClose={() => setShowModal(false)}/>
 
   </div>
 

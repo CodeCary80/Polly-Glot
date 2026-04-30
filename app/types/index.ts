@@ -11,6 +11,7 @@ type Props = {
 export type ApiKeyModalProps = {
   isOpen: boolean
   onSubmit: (key: string) => void
+  onClose: () => void
 }
 
 export type ChatterBoxProps = {
