@@ -33,3 +33,8 @@ body {
 .prose ul > li::marker {
   color: #32CD32;
 }
+
+.prose ul > li {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
