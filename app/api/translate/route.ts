@@ -25,7 +25,9 @@ export async function POST(request: Request) {
             `,
       messages: [{ role: "user", content: `trasnlate ${text} to ${language}`  }],
     })
-      return Response.json({ translation: (msg.content[0] as any).text })
+    const block = msg.content[0]
+    if(block.type !== 'text'){ return Response.json({ error: "Unexpected response from Claude" }, { status: 500 })}
+    return Response.json({ translation: block.text })
   } catch (error) {
     console.error("Anthropic error:", error)
   return Response.json({ error: "Translation failed" }, { status: 500 })

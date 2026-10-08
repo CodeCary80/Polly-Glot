@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect  } from 'react'
+import { useState } from 'react'
 import Logo from "@/public/parrot.png"
 import HeroBanner from "@/public/worldmap.png"
 import OriginalSelections from "@/app/components/OriginalSelections"
@@ -12,10 +12,16 @@ export default function Home() {
   const [view, setView] = useState("input")
   const [translation, setTranslation] = useState('')
   const [originalText, setOriginalText] = useState('')
-  const [usageCount,setUsageCount] = useState(0)
-  const [showModal, setShowModal] = useState(false)
-  const [userApiKey, setUserApiKey] = useState("")
+  const [usageCount,setUsageCount] = useState(()=>{
+    if(typeof window === "undefined")return 0
+    return parseInt(localStorage.getItem("usageCount") || "0")
+  })
 
+  const [userApiKey, setUserApiKey] = useState(()=>{
+    if(typeof window === "undefined") return ""
+    return localStorage.getItem("userApiKey") || ""
+  })
+  const [showModal, setShowModal] = useState(false)
 
   async function onTranslate(text: string, language: string) {
           const key = userApiKey || localStorage.getItem("userApiKey") || ""
@@ -89,14 +95,6 @@ export default function Home() {
         setShowModal(false)
   }
 
-  useEffect(()=>{
-      const count =localStorage.getItem("usageCount")
-      const key = localStorage.getItem("userApiKey")
-      console.log("count:", count, "key:", key) //
-      if(count) setUsageCount(parseInt(count))
-      if(key) setUserApiKey(key)
-      if (parseInt(count || "0") >= 10 && !key) setShowModal(true)
-  },[])
 
   return (
     <main className="flex justify-center py-6">
