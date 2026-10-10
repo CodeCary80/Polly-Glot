@@ -10,16 +10,13 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Poppins", sans-serif;
+  font-family: var(--font-poppins), sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-big-shoulders: "Big Shoulders Display", sans-serif;
-  --font-poppins: "Poppins", sans-serif;
+  --font-display: var(--font-big-shoulders);
 }
 
 

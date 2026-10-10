@@ -1,15 +1,22 @@
 import "./globals.css";
 import { ReactNode } from "react"
+import { Poppins, Big_Shoulders } from "next/font/google"
+
+const poppins = Poppins({
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+})
+
+const bigShoulders = Big_Shoulders({
+  subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-big-shoulders",
+})
 
 export default function RootLayout({ children }:{ children: ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;700;900&family=Poppins:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${poppins.variable} ${bigShoulders.variable}`}>
       <body>
         {children}
       </body>
