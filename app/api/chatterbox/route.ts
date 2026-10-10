@@ -34,8 +34,9 @@ export async function POST(request: Request) {
             `,
       messages: messages,
     })
-
-    return Response.json({ reply: (msg.content[0] as any).text })
+    const block = msg.content[0]
+    if(block.type !== 'text'){ return Response.json({ error: "Unexpected response from Claude" }, { status: 500 })}
+    return Response.json({ reply: block.text })
   } catch (error) {
     console.error("Anthropic error:", error)
   return Response.json({ error: "Chat failed. Please try again." }, { status: 500 })
