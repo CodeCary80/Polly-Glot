@@ -100,7 +100,7 @@ export default function ChatterBox({onBack, incrementUsage, userApiKey, onInvali
             incrementUsage()
             }
           }
-          }catch(err){setError("Network error. Please check your connection.")}
+          }catch{setError("Network error. Please check your connection.")}
           finally{
             setInput('')
             setIsLoading(false)

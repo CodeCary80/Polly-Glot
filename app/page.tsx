@@ -6,6 +6,7 @@ import OriginalSelections from "@/app/components/OriginalSelections"
 import TranslationOutput from "@/app/components/TranslationOuput"
 import ChatterBox from "@/app/components/ChatterBox"
 import ApiKeyModal from './components/ApiKeyModal'
+import Image from "next/image"
 
 
 export default function Home() {
@@ -53,7 +54,7 @@ export default function Home() {
                           3. No Conversational Filler: Do not respond with "Here is your translation" or "Sure, I can help." Output only the translated text.
                           4. Context Preservation: If the input contains code snippets or variables, do not translate the code—only the comments or strings if applicable.
                       `,
-                messages: [{ role: "user", content: `trasnlate ${text} to ${language}`  }],
+                messages: [{ role: "user", content: `translate ${text} to ${language}`  }],
           })
         })
               const data = await res.json()
@@ -102,13 +103,14 @@ export default function Home() {
   <div className="w-[390px] h-[900px] border-1 border-[#BCBCBC] rounded-b-2xl overflow-hidden flex flex-col">
     
     <section className="relative w-full h-[213px] flex-shrink-0">
-      <img 
-        src={HeroBanner.src}  
+      <Image 
+        src={HeroBanner}  
         alt="Hero banner" 
         className="absolute w-[400px] h-full object-cover"
+        fetchPriority="high"
       />
       <div className="absolute left-14 bottom-18">
-        <img src={Logo.src} className="w-[95px] h-auto" alt="LOGO" />
+        <Image src={Logo} className="w-[95px] h-auto" alt="LOGO" />
       </div>
       <div className="absolute bottom-18 left-48">
         <h1 className="text-[43px] text-[#32CD32]" style={{ fontFamily: "Big Shoulders Display, sans-serif" }}>PollyGlot</h1>

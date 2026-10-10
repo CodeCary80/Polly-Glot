@@ -3,11 +3,6 @@ export type Message = {
   content: string
 }
 
-type Props = {
-  onTranslate: (text: string, language: string) => void
-  onChat: () => void
-}
-
 export type ApiKeyModalProps = {
   isOpen: boolean
   onSubmit: (key: string) => void
