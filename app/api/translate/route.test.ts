@@ -16,8 +16,6 @@ function makeRequest(body: unknown) {
     body: JSON.stringify(body),
   })
 }
-import { languages } from "@/app/lib/translatetion"
-
 
 describe('POST /api/translate',()=>{
     beforeEach(()=>{
