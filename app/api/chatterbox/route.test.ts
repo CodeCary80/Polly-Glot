@@ -34,7 +34,7 @@ describe('POST /api/chatterbox',()=>{
         expect(mockCreate).not.toHaveBeenCalled()
     })
 
-    it("returns the translation on success", async () => {
+    it("returns the reply on success", async () => {
     mockCreate.mockResolvedValueOnce({ content: [{ type: "text", text: "Hola" }] })
 
     const res = await POST(makeRequest({ messages: [{ role: "user", content: "Hello" }], language: "spanish" }))
