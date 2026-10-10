@@ -113,7 +113,7 @@ export default function Home() {
         <Image src={Logo} className="w-[95px] h-auto" alt="LOGO" />
       </div>
       <div className="absolute bottom-18 left-48">
-        <h1 className="text-[43px] text-[#32CD32]" style={{ fontFamily: "Big Shoulders Display, sans-serif" }}>PollyGlot</h1>
+        <h1 className="font-display text-[43px] text-[#32CD32]">PollyGlot</h1>
         <p className="text-[12px] text-[#fff]">Perfect Translation Every Time</p>
       </div>
     </section>
