@@ -53,7 +53,7 @@ export default function Home() {
                           3. No Conversational Filler: Do not respond with "Here is your translation" or "Sure, I can help." Output only the translated text.
                           4. Context Preservation: If the input contains code snippets or variables, do not translate the code—only the comments or strings if applicable.
                       `,
-                messages: [{ role: "user", content: `trasnlate ${text} to ${language}`  }],
+                messages: [{ role: "user", content: `translate ${text} to ${language}`  }],
           })
         })
               const data = await res.json()
