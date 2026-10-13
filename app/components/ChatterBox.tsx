@@ -6,6 +6,7 @@ import { Message } from "@/app/types"
 import { marked } from "marked"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { ChatterBoxProps } from "@/app/types"
+import { MODEL, chatPrompt } from "@/app/lib/prompts"
 
 
 export default function ChatterBox({onBack, incrementUsage, userApiKey, onInvalidKey}: ChatterBoxProps) {
@@ -55,27 +56,11 @@ export default function ChatterBox({onBack, incrementUsage, userApiKey, onInvali
                           "anthropic-dangerous-direct-browser-access": "true"
                         },
                         body: JSON.stringify({
-                          model: "claude-haiku-4-5-20251001",
+                          model: MODEL,
                             max_tokens: 1024,
                             temperature: 1,
-                            system: `
-                                      You are a helpful and engaging AI conversation partner. Your task is to communicate with the user exclusively in the language specified: ${language}.
-
-                                      Follow these strict rules:
-
-                                      Language Consistency: Always respond in the language specified by the user. If the user sends a message in a different language, reply to their intent but do it using the target language.
-
-                                      Natural Interaction: Maintain a tone that is appropriate for a chat application—friendly, clear, and helpful.
-
-                                      Grammar & Expression Feedback: If the user's message contains grammatical errors or sounds unnatural/non-native, provide a brief correction at the very beginning of your response. Use the format: *Correction: [Corrected sentence]*. If the input is correct, do not include this section.
-
-                                      Formatting: Use Markdown (bolding, lists, or headers) where appropriate to make long responses easy to read on a mobile screen.
-
-                                      No Conversational Filler: Do not include meta-talk like "I understand" or "Here is my response." Start your reply immediately with the content of the conversation.
-
-                                      Technical Integrity: If the conversation involves technical topics, preserve the accuracy of terminology. If code snippets are discussed, do not translate the functional code; only explain it in the target language.
-                                  `,
-                          messages: [...messages, { role: "user", content: input }]
+                            system: chatPrompt(language),
+                            messages: [...messages, { role: "user", content: input }]
                         })
                       })
                       const data = await res.json()
