@@ -80,6 +80,19 @@ describe("Home",()=>{
         expect(screen.getByText(/Please enter text and select a language/)).toBeInTheDocument()
         expect(fetchMock).not.toHaveBeenCalled()
     })
+
+    it("translates into English when the dropdown is left on its default", async()=>{
+        fetchMock.mockResolvedValueOnce(jsonResponse({translation: "Hello"}))
+
+        render(<Home />)
+        const user = userEvent.setup()
+        await user.type(screen.getByPlaceholderText("How are you?"),"Hola")
+        await user.click(screen.getByRole("button",{name:"Translate"}))
+
+        expect(await screen.findByDisplayValue("Hello")).toBeInTheDocument()
+        const body = JSON.parse(fetchMock.mock.calls[0][1].body)
+        expect(body.language).toBe("english")
+    })
 })
 
 

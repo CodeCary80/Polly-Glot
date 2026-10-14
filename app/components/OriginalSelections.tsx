@@ -10,7 +10,7 @@ type Props = {
 
 export default function OriginalSelections({onTranslate,onChat }:Props) {
   const [text, setText] = useState('')
-  const [language, setLanguage] = useState('')
+  const [language, setLanguage] = useState(languages[0].id)
   const [error, setError] = useState<string | null>(null)
 
   const handleTextChange= (event:React.ChangeEvent<HTMLTextAreaElement>)=>{
