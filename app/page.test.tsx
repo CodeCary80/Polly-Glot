@@ -1,11 +1,85 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from "vitest"
+import { describe, it, vi, expect, beforeEach } from "vitest"
 import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
 import Home from "./page"
 
+
+const fetchMock = vi.fn()
+
+function jsonResponse(data: unknown){
+    return new Response(JSON.stringify(data))
+}
+
+async function translate(text:string, language: string){
+    const user = userEvent.setup()
+    await user.type(screen.getByPlaceholderText("How are you?"),text)
+    await user.selectOptions(screen.getByRole("combobox"),language)
+    await user.click(screen.getByRole("button",{name:"Translate"}))
+}
+
 describe("Home",()=>{
+    beforeEach(()=>{
+    localStorage.clear()
+    fetchMock.mockReset()
+    vi.stubGlobal("fetch", fetchMock)
+})
     it("renders the title",()=>{
         render(<Home />)
         expect(screen.getByRole("heading",{name:"PollyGlot"})).toBeInTheDocument()
     })
+
+    it("translates through our API when there is no key", async()=>{
+        fetchMock.mockResolvedValueOnce(jsonResponse({translation: "Hola"}))
+        render(<Home />)
+        await translate("Hello", "spanish")
+
+        expect(await screen.findByDisplayValue("Hola")).toBeInTheDocument()
+        expect(fetchMock).toHaveBeenCalledWith("/api/translate", expect.anything())
+        expect(localStorage.getItem("usageCount")).toBe("1")
+    })
+
+    it("calls Anthropic directly with the user's key", async()=>{
+        localStorage.setItem("userApiKey", "test-key")
+        fetchMock.mockResolvedValueOnce(jsonResponse({ content: [{ type: "text", text: "Bonjour" }] }))
+
+        render(<Home />)
+        await translate("Hello", "french")
+
+        expect(await screen.findByDisplayValue("Bonjour")).toBeInTheDocument()
+        const[url,options] = fetchMock.mock.calls[0]
+        expect(url).toBe("https://api.anthropic.com/v1/messages")
+        expect(options.headers["x-api-key"]).toBe("test-key")
+    })
+
+    it("opens the key modal after 10 free uses", async()=>{
+        localStorage.setItem("usageCount", "10")
+
+        render(<Home />)
+        await translate("Hello", "french")
+
+        expect(screen.getByText("You've used your 10 free translations")).toBeInTheDocument()
+        expect(fetchMock).not.toHaveBeenCalled()
+    })
+
+    it("opens the key modal when the api returns an error", async()=>{
+        fetchMock.mockResolvedValueOnce(jsonResponse({error: "Translation failed"}))
+
+        render(<Home />)
+        await translate("Hello", "french")
+
+        expect(await screen.findByText("You've used your 10 free translations")).toBeInTheDocument()
+        expect(localStorage.getItem("usageCount")).toBeNull()
+    })
+
+    it("asks for text and a language before translating", async()=>{
+        render(<Home />)
+        const user = userEvent.setup()
+        await user.click(screen.getByRole("button",{name:"Translate"}))
+
+        expect(screen.getByText(/Please enter text and select a language/)).toBeInTheDocument()
+        expect(fetchMock).not.toHaveBeenCalled()
+    })
 })
+
+
