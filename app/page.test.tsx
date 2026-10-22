@@ -93,6 +93,17 @@ describe("Home",()=>{
         const body = JSON.parse(fetchMock.mock.calls[0][1].body)
         expect(body.language).toBe("english")
     })
+
+    it("show an error message when the network fails", async()=>{
+        vi.spyOn(console,"error").mockImplementation(()=>{})
+        fetchMock.mockResolvedValueOnce(new TypeError("Failed to fetch"))
+
+        render(<Home />)
+        await translate("Hello","french")
+
+        expect(await screen.findByRole("alert")).toHaveTextContent("Network error. Please check your connection")
+        expect(localStorage.getItem("usageCount")).toBeNull()
+    })
 })
 
 

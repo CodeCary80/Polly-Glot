@@ -10,6 +10,7 @@ import Image from "next/image"
 import { MODEL, TRANSLATOR_PROMPT } from "@/app/lib/prompts"
 
 
+
 export default function Home() {
   const [view, setView] = useState("input")
   const [translation, setTranslation] = useState('')
@@ -24,6 +25,7 @@ export default function Home() {
     return localStorage.getItem("userApiKey") || ""
   })
   const [showModal, setShowModal] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function onTranslate(text: string, language: string) {
           const key = userApiKey || localStorage.getItem("userApiKey") || ""
@@ -32,6 +34,7 @@ export default function Home() {
             setShowModal(true)
             return
           }
+          setError(null)
           try{
           if (key) {
             const res = await fetch("https://api.anthropic.com/v1/messages", {
@@ -73,7 +76,9 @@ export default function Home() {
                 }
                 setView("result")
                 incrementUsage()
-          }catch(err){console.error("Translation error:", err)}
+          }catch(err){console.error("Translation error:", err)
+                      setError("Network error. Please check your connection.")
+                      }
               }
 
   function incrementUsage(){
@@ -110,6 +115,8 @@ export default function Home() {
         <p className="text-[12px] text-[#fff]">Perfect Translation Every Time</p>
       </div>
     </section>
+
+    {error && <p role="alert" className="text-red-500 text-sm text-center mt-2">⚠️ {error}</p>}
 
     {view === "input"
       ? <OriginalSelections onTranslate={onTranslate} onChat={() => setView("chat")} />
