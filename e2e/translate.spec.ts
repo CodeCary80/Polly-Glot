@@ -14,4 +14,18 @@ test.describe("Translation",()=>{
         await expect(page.getByText("Please enter text and select a language")).toBeVisible()
         expect(requests).toBe(0)
     })
+
+    test("A user types text, picks Spanish and clicks Translate. The result screen shows the translation", async({page})=>{
+        await page.route("**/api/translate", (route)=>{
+            return route.fulfill({json:{translation:"Hola"}})
+        })
+
+        await page.goto("/")
+        await page.getByPlaceholder("How are you?").fill("Hello")
+        await page.getByRole("combobox").selectOption("spanish")
+        await page.getByRole("button",{name: "Translate"}).click()
+
+        await expect(page.getByText("Your translation 👇")).toBeVisible()
+        await expect(page.locator("textarea").nth(1)).toHaveValue("Hola")
+    })
 })
