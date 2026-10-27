@@ -68,7 +68,7 @@ export default function Home() {
                     })
                     const data = await res.json()
                     if (data.error) {
-                      setShowModal(true)
+                      setError("Translation failed. Please try again.")
                       return
                     }
                     setTranslation(data.translation)
