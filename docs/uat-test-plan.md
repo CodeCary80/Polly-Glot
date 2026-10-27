@@ -40,7 +40,7 @@ Written as **Given / When / Then**.
 ### AC-2 — Empty input
 - **Given** the text box is empty or contains only spaces
 - **When** the user clicks **Translate**
-- **Then** the warning "⚠️ Please enter text and select a language." appears, and no request is sent
+- **Then** the warning "Please enter text and select a language." appears, and no request is sent
 
 ### AC-3 — API error
 - **Given** the translation service returns an error
@@ -50,7 +50,7 @@ Written as **Given / When / Then**.
 ### AC-4 — Network failure
 - **Given** the user's device cannot reach the server (offline)
 - **When** the user clicks **Translate**
-- **Then** the alert "⚠️ Network error. Please check your connection." appears below the header, no free use is consumed, and the alert disappears after a later successful translation
+- **Then** the alert "Network error. Please check your connection." appears below the header, no free use is consumed, and the alert disappears after a later successful translation
 
 ### AC-5 — Usage limit
 - **Given** the user has used 10 free translations and has no API key
@@ -84,7 +84,7 @@ Written as **Given / When / Then**.
 | **Covers** | AC-2 |
 | **Preconditions** | Home page open |
 | **Steps** | 1. Leave the text box empty<br>2. Click **Translate**<br>3. Type only spaces, click **Translate** again |
-| **Expected** | Both times: warning "⚠️ Please enter text and select a language." appears; no request is sent; page stays on the input screen |
+| **Expected** | Both times: warning "Please enter text and select a language." appears; no request is sent; page stays on the input screen |
 | **Automated** | Vitest: `asks for text and a language before translating` |
 
 ### TC-03 — API returns an error
@@ -103,7 +103,7 @@ Written as **Given / When / Then**.
 | **Covers** | AC-4 |
 | **Preconditions** | No `userApiKey`; browser set to **Offline** |
 | **Steps** | 1. Type `Hello`, select **French**<br>2. Click **Translate**<br>3. Switch back online, click **Translate** again |
-| **Expected** | Step 2: alert "⚠️ Network error. Please check your connection." appears; `usageCount` unchanged<br>Step 3: alert disappears and the translation is shown |
+| **Expected** | Step 2: alert "Network error. Please check your connection." appears; `usageCount` unchanged<br>Step 3: alert disappears and the translation is shown |
 | **Automated** | Vitest: `shows an error message when the network fails` |
 
 ### TC-05 — Free usage limit reached
@@ -145,8 +145,8 @@ Written as **Given / When / Then**.
 
 | Layer | Tool | Status |
 |---|---|---|
-| Unit — API routes | Vitest | ✅ 10 tests |
-| Component — home page | Vitest + React Testing Library | ✅ 8 tests |
+| Unit — API routes | Vitest | 10 tests |
+| Component — home page | Vitest + React Testing Library | 8 tests |
 | End-to-end — real browser | Playwright | Planned: TC-01, TC-02, TC-03 |
 
 All tests run in GitHub Actions on every pull request.

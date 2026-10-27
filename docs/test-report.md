@@ -35,65 +35,65 @@
 
 | Layer | Tool | File(s) | Tests | Result | Duration |
 |---|---|---|---|---|---|
-| Unit — API routes | Vitest | `app/api/*/route.test.ts` | 10 | ✅ 10 passed | < 0.1 s |
-| Component — home page | Vitest + React Testing Library (jsdom) | `app/page.test.tsx` | 8 | ✅ 8 passed | ~0.4 s |
-| End-to-end — real browser | Playwright (Chromium) | `e2e/translate.spec.ts` | 3 | ✅ 3 passed | ~5.6 s |
-| **Total** | | | **21** | **✅ 21 passed** | |
+| Unit — API routes | Vitest | `app/api/*/route.test.ts` | 10 | 10 passed | < 0.1 s |
+| Component — home page | Vitest + React Testing Library (jsdom) | `app/page.test.tsx` | 8 | 8 passed | ~0.4 s |
+| End-to-end — real browser | Playwright (Chromium) | `e2e/translate.spec.ts` | 3 | 3 passed | ~5.6 s |
+| **Total** | | | **21** | **21 passed** | |
 
 ### 3.1 Unit tests — API routes (10)
 
 | Route | Test | Result |
 |---|---|---|
-| `/api/translate` | returns 400 when text is missing | ✅ |
-| `/api/translate` | returns 400 when language is missing | ✅ |
-| `/api/translate` | returns the translation on success | ✅ |
-| `/api/translate` | returns 500 when Claude does not reply with text | ✅ |
-| `/api/translate` | returns 500 when Anthropic throws | ✅ |
-| `/api/chatterbox` | returns 400 when messages is missing | ✅ |
-| `/api/chatterbox` | returns 400 when language is missing | ✅ |
-| `/api/chatterbox` | returns the reply on success | ✅ |
-| `/api/chatterbox` | returns 500 when Claude does not reply with text | ✅ |
-| `/api/chatterbox` | returns 500 when Anthropic throws | ✅ |
+| `/api/translate` | returns 400 when text is missing | Pass |
+| `/api/translate` | returns 400 when language is missing | Pass |
+| `/api/translate` | returns the translation on success | Pass |
+| `/api/translate` | returns 500 when Claude does not reply with text | Pass |
+| `/api/translate` | returns 500 when Anthropic throws | Pass |
+| `/api/chatterbox` | returns 400 when messages is missing | Pass |
+| `/api/chatterbox` | returns 400 when language is missing | Pass |
+| `/api/chatterbox` | returns the reply on success | Pass |
+| `/api/chatterbox` | returns 500 when Claude does not reply with text | Pass |
+| `/api/chatterbox` | returns 500 when Anthropic throws | Pass |
 
 ### 3.2 Component tests — home page (8)
 
 | Test | Result |
 |---|---|
-| renders the title | ✅ |
-| translates through our API when there is no key | ✅ |
-| calls Anthropic directly with the user's key | ✅ |
-| opens the key modal after 10 free uses | ✅ |
-| shows an error message when the api returns an error | ✅ |
-| asks for text and a language before translating | ✅ |
-| translates into English when the dropdown is left on its default | ✅ |
-| shows an error message when the network fails | ✅ |
+| renders the title | Pass |
+| translates through our API when there is no key | Pass |
+| calls Anthropic directly with the user's key | Pass |
+| opens the key modal after 10 free uses | Pass |
+| shows an error message when the api returns an error | Pass |
+| asks for text and a language before translating | Pass |
+| translates into English when the dropdown is left on its default | Pass |
+| shows an error message when the network fails | Pass |
 
 ### 3.3 End-to-end tests (3)
 
 | Test | Result |
 |---|---|
-| shows a warning when the text is empty | ✅ |
-| a user translates text into Spanish and sees the result screen | ✅ |
-| if the API returns an error, the user is told and stays on the input screen | ✅ |
+| shows a warning when the text is empty | Pass |
+| a user translates text into Spanish and sees the result screen | Pass |
+| if the API returns an error, the user is told and stays on the input screen | Pass |
 
 ## 4. Results by UAT Test Case
 
 | TC | Title | Covers | Automated by | Result |
 |---|---|---|---|---|
-| TC-01 | Translate successfully (free user) | AC-1 | Vitest + Playwright | ✅ Pass |
-| TC-02 | Empty input is rejected | AC-2 | Vitest + Playwright | ✅ Pass |
-| TC-03 | API returns an error | AC-3 | Vitest + Playwright | ✅ Pass (after fix D-4) |
-| TC-04 | Network failure | AC-4 | Vitest | ✅ Pass |
-| TC-05 | Free usage limit reached | AC-5 | Vitest | ✅ Pass |
-| TC-06 | Own API key bypasses the limit | AC-5, AC-1 | Vitest (step 2 only) | ⚠️ Partial — step 1 (entering a key in the modal) is not automated |
+| TC-01 | Translate successfully (free user) | AC-1 | Vitest + Playwright | Pass |
+| TC-02 | Empty input is rejected | AC-2 | Vitest + Playwright | Pass |
+| TC-03 | API returns an error | AC-3 | Vitest + Playwright | Pass (after fix D-4) |
+| TC-04 | Network failure | AC-4 | Vitest | Pass |
+| TC-05 | Free usage limit reached | AC-5 | Vitest | Pass |
+| TC-06 | Own API key bypasses the limit | AC-5, AC-1 | Vitest (step 2 only) | Partial — step 1 (entering a key in the modal) is not automated |
 
 | Acceptance criterion | Status |
 |---|---|
-| AC-1 Normal input | ✅ Met |
-| AC-2 Empty input | ✅ Met |
-| AC-3 API error | ✅ Met (was not met before D-4 fix) |
-| AC-4 Network failure | ✅ Met (was not met before D-3 fix) |
-| AC-5 Usage limit | ✅ Met (client-side only, see KI-2) |
+| AC-1 Normal input | Met |
+| AC-2 Empty input | Met |
+| AC-3 API error | Met (was not met before D-4 fix) |
+| AC-4 Network failure | Met (was not met before D-3 fix) |
+| AC-5 Usage limit | Met (client-side only, see KI-2) |
 
 ## 5. Defects Found and Fixed
 
