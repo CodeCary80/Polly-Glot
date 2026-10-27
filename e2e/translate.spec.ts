@@ -39,7 +39,8 @@ test.describe("Translation",()=>{
         await page.getByRole("combobox").selectOption("spanish")
         await page.getByRole("button",{name: "Translate"}).click()
 
-        await expect(page.getByText("You've used your 10 free translations")).toBeVisible()
+        await expect(page.getByText("Translation failed. Please try again.")).toBeVisible()
+        await expect(page.getByText("You've used your 10 free translations")).toBeHidden()
         await expect(page.getByPlaceholder("How are you?")).toHaveValue("Hello")
     })
 })

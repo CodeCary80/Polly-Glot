@@ -62,13 +62,14 @@ describe("Home",()=>{
         expect(fetchMock).not.toHaveBeenCalled()
     })
 
-    it("opens the key modal when the api returns an error", async()=>{
+    it("shows an error message when the api returns an error", async()=>{
         fetchMock.mockResolvedValueOnce(jsonResponse({error: "Translation failed"}))
 
         render(<Home />)
         await translate("Hello", "french")
 
-        expect(await screen.findByText("You've used your 10 free translations")).toBeInTheDocument()
+        expect(await screen.findByRole("alert")).toHaveTextContent("Translation failed. Please try again.")
+        expect(screen.queryByText("You've used your 10 free translations")).toBeNull()
         expect(localStorage.getItem("usageCount")).toBeNull()
     })
 
