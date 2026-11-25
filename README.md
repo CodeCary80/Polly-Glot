@@ -64,6 +64,15 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 PollyGlot gives every visitor **10 free uses** (translations + chat messages combined). After that, a modal prompts the user to enter their own Anthropic API key.
 
+The 10-use counter lives in `localStorage`, so it is a convenience, not a security limit. The server routes protect the server key on their own (`app/lib/guard.ts`):
+- Language must be one of the app's supported languages (it goes into the system prompt)
+- Translation text: at most 2,000 characters
+- Chat: valid `user`/`assistant` messages only, at most 2,000 characters each; only the last 20 messages are sent to Claude
+- At most 10 requests per minute per IP (returns `429`). Counts are kept in server memory, so this is best effort on serverless hosts
+- The model is fixed on the server
+
+Also set a monthly spend limit on the server key in the Anthropic Console.
+
 **How the user key is handled:**
 - Stored in the browser's `localStorage` only
 - Used to call `api.anthropic.com` **directly from the browser** — it never touches this server

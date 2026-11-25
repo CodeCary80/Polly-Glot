@@ -80,7 +80,7 @@ export default function ChatterBox({onBack, incrementUsage, userApiKey, onInvali
                     })
             const data = await res.json()
 
-            if(data.error){setError("Sorry, something went wrong. Please try again.")}else{
+            if(data.error){setError(res.status === 429 ? data.error : "Sorry, something went wrong. Please try again.")}else{
             setMessages(prev=>[...prev,{ role: "assistant", content: data.reply }])
             incrementUsage()
             }
